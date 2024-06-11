@@ -1,1 +1,1 @@
-# Benchmark_QRS_Detectors
+# QRS_Detectors_SATO_Benchmark
