@@ -17,7 +17,7 @@ datasets_list = ['mit-bih-arrhythmia', 'mit-bih-noise-stress-test-e24', 'mit-bih
                  'mit-bih-long-term-ecg']
 
 # MIT-BIH Arrhythmia Database
-# records and their channels
+# records and their channels ['101', '103', '105', '107', '109', '112', '114', '116', '121', '201', '203', '207', '212', '215', '219', '228', '233']
 mit_bih_arrhythmia = {
     '100': ['MLII', 'V5'],
     '101': ['MLII', 'V1'],
@@ -345,7 +345,7 @@ mit_bih_supraventricular_arrhythmia = {
     '806': ['ECG1', 'ECG2'],
     '807': ['ECG1', 'ECG2'],
     '808': ['ECG1', 'ECG2'],
-    '809': ['ECG1', 'ECG2'],
+    '809': ['ECG1', 'ECG2'], 
     '810': ['ECG1', 'ECG2'],
     '811': ['ECG1', 'ECG2'],
     '812': ['ECG1', 'ECG2'],

@@ -4,13 +4,13 @@ import pywt
 import pandas as pd
 import scipy
 from scipy.interpolate import CubicSpline
-from algo.seuil_dynamique import seuil_dynamique
-from algo.KNN2 import KNN2
+from algo.seuil_dynamique import detect_peaks
 
 
 def multi_lvl(ecg_signal, fs):
     clean_signal = preprocessing(ecg_signal, fs)
-
+    #L = detect_peaks(clean_signal, distance= int(fs*0.3)).tolist()
+    #P = [clean_signal[a] for a in L]
     #L = KNN2(ecg_signal, fs)
     #P = [clean_signal[i] for i in L]
     #qrs_detector_wow(clean_signal, fs)
@@ -138,9 +138,3 @@ def qrs_detector_5(signal, fs, seuil = 0, delay = 0):
         peak_amplitude.append(max_value[0])
         peak_position.append(max_value[1])
     return peak_position, peak_amplitude
-
-
-def qrs_detector_wow(signal, fs):
-    peak_position = seuil_dynamique(signal, fs)
-    peak_amplitude = [signal[i] for i in peak_position]
-    return peak_position.tolist(), peak_amplitude

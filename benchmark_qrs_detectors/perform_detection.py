@@ -26,12 +26,13 @@ def write_detections_json(dataset: str, algorithm: str, dict_detections: Dict[st
     with open(f'output/frames/{algorithm}_{dataset}.json', 'w') as outfile:
         json.dump(dict_detections, outfile)
 
-
+import time
 # parse arguments
 @click.command()
 @click.option('--data', required=True, type=click.Choice(datasets_list, case_sensitive=False), help='dataset')
 @click.option('--algo', required=True, type=click.Choice(algorithms_list, case_sensitive=True), help='algorithm')
 def main(data: str, algo: str) -> None:
+    start = time.time()
     dataset = data
     algorithm = algo
     if os.path.isfile('output/frames/{algorithm}_{dataset}.json'):
@@ -57,6 +58,8 @@ def main(data: str, algo: str) -> None:
             write_detections_json(dataset, algorithm, detections_dict)
             print(f'Detection with {algorithm} on dataset {dataset} was successful....')
             break
+    elapsed = time.time() - start
+    print(f'{elapsed*1000} ms')
 
 
 main()

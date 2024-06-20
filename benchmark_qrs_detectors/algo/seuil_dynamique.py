@@ -1,10 +1,16 @@
 import numpy as np
+import pywt
+from scipy.interpolate import CubicSpline
+from algo.wavelet_coef import upsample_signal, wavelet_decomposition
+
 from scipy.signal import butter, filtfilt, medfilt, firwin, lfilter
 
 def seuil_dynamique(sig, freq_sampling):
-    cleaned_ecg = preprocess_ecg(sig, freq_sampling, 5, 15)
-    peaks = detect_peaks(cleaned_ecg, distance = int(freq_sampling * 0.222))
+    cleaned_ecg = preprocess_ecg(sig, freq_sampling, 5, 22)
+    #cleaned_ecg = wavelet_decomposition(sig, 6)
+    peaks = detect_peaks(cleaned_ecg, distance = int(freq_sampling * 0.33))
     qrs_indices = threshold_detection(cleaned_ecg, peaks, freq_sampling, initial_search_samples= int(freq_sampling * 0.83), long_peak_distance=int(freq_sampling*1.111))
+    
     return qrs_indices
 
 def detect_peaks(cleaned_ecg, distance=0, no_peak_distance=300):
@@ -53,7 +59,6 @@ def detect_peaks(cleaned_ecg, distance=0, no_peak_distance=300):
         i += 1
     
     return np.array(refined_peaks)
-
 
 def threshold_detection(cleaned_ecg, peaks, fs, initial_search_samples=300, long_peak_distance=400):
     M_VAL = np.max(cleaned_ecg[:initial_search_samples])

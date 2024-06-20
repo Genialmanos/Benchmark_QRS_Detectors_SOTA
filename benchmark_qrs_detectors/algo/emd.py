@@ -12,15 +12,15 @@ import time
 from scipy.interpolate import CubicSpline
 
 def full_emd(signal, fs):
-    M = int(fs*0.12)
+    M = int(fs*0.15)
     no_baseline = remove_baseline_wander(signal, fs)
 
     IMFs = decompose_signal_into_imfs(no_baseline)
     sntks = [moving_window_integration(nonlinear_transform(imf), M) for imf in IMFs]
     z_n = np.sum(sntks, axis=0)
     z_filtered = low_pass_filter(z_n, 1 , fs)
-    final_ecg = normalize_data(z_filtered)
-    r_positions = qrs_localization(final_ecg, fs)
+    #final_ecg = normalize_data(z_filtered)
+    r_positions = qrs_localization(z_filtered, fs)
     return r_positions
 
 def decompose_signal_into_imfs(signal):
