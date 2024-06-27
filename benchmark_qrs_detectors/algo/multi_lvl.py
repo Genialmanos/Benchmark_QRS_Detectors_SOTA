@@ -4,17 +4,17 @@ import pywt
 import pandas as pd
 import scipy
 from scipy.interpolate import CubicSpline
-from algo.seuil_dynamique import detect_peaks
+from algo.seuil_dynamique import detect_peaks, seuil_dynamique
 
 
 def multi_lvl(ecg_signal, fs):
     clean_signal = preprocessing(ecg_signal, fs)
-    #L = detect_peaks(clean_signal, distance= int(fs*0.3)).tolist()
-    #P = [clean_signal[a] for a in L]
+    L = seuil_dynamique(ecg_signal, fs).tolist()
+    P = [clean_signal[a] for a in L]
     #L = KNN2(ecg_signal, fs)
     #P = [clean_signal[i] for i in L]
     #qrs_detector_wow(clean_signal, fs)
-    L, P = qrs_detector_5(clean_signal, fs)
+    #L, P = qrs_detector_5(clean_signal, fs)
     T = sum(P) / len(P)
     M = T.copy()
     R = T * 0.6
@@ -29,12 +29,16 @@ def multi_lvl(ecg_signal, fs):
     G = P[:6]
     B_i = 0
     while i < len(P):
+        if H[-1] == L[i]:
+            i += 1
+            continue
         if P[i] >= M:
             G.append(P[i])
             H.append(L[i])
             Vsl = make_vsl(P[i] , Vsl)
 
         elif P[i] < M and P[i] >= R:
+            #print(f"i = {i} ; H[-1] = {H[-2:]}")
             B_i = make_B_i(H, fs, len(H)-2)
             Bw = make_Bw(B_i, len(H)-1, H, fs)
 

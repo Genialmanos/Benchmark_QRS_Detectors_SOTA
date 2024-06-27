@@ -1,0 +1,3 @@
+venv/
+tests/data_csv/
+benchmark_qrs_detectors/data/

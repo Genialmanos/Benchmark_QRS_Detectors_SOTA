@@ -26,12 +26,9 @@ def CNN(ecg_signal, fs):
     windows = extract_windows(cleaned_ecg, fs, v_cut)
 
     R = windows.reshape((windows.shape[0], v_cut, 1))    #145
-    #model =  pickle.load(open("model_CNN", 'rb'))
-    #model =  joblib.load(open("model_CNN.pkl", 'rb'))
-    #model = keras.saving.saved_model("model_CNN.keras")
-    model = keras.models.load_model("model_CNN_long_term.h5")
-    predictos = model.predict(R).flatten()
-    pred_frame = [a+(fs//10) for a in range(len(predictos)) if predictos[a] >= 0.5]
+    model = keras.models.load_model("model_CNN_arrhythmia.h5")
+    predict = model.predict(R).flatten()
+    pred_frame = [a+(fs//10) for a in range(len(predict)) if predict[a] >= 0.5]
     final_pred = regroup(np.array(pred_frame), (fs//10))
     return final_pred
 

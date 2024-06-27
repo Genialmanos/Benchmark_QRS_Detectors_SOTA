@@ -9,12 +9,12 @@ from sklearn.preprocessing import MinMaxScaler
 
 def full_wavelets(signal, sampling_rate):
 
-    h = wavelet_decomposition(signal, 6)
+    h = wavelet_decomposition(signal, 5)
     qrs = np.array(qrs_localization_wave(h, 0.15, sampling_rate)) #0.15
     qrs = delete_contraction(qrs, sampling_rate, sampling_rate//10)
-    #qrs = qrs + searchback_missed_qrs(h, qrs, sampling_rate)
+    qrs = qrs + searchback_missed_qrs(h, qrs, sampling_rate)
     #qrs = delete_contraction(qrs, sampling_rate, sampling_rate//10)
-    qrs = delete_stat(qrs, sampling_rate)
+    #qrs = delete_stat(qrs, sampling_rate)
     return qrs
 
 def delete_stat(qrs, fs):
@@ -37,7 +37,7 @@ def upsample_signal(original_signal, upsampled_length):
 
 def wavelet_decomposition(sig, idx):
     # Décomposition en ondelettes
-    coeffs = pywt.wavedec(sig, "db1", level=idx)
+    coeffs = pywt.wavedec(sig, "haar", level=idx)
     
     # Prendre les coefficients aux niveaux idx-4 et idx-5
     w4 = coeffs[-2]

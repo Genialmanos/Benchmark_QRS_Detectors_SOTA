@@ -59,7 +59,7 @@ def main(data: str, algo: str) -> None:
             print(f'Detection with {algorithm} on dataset {dataset} was successful....')
             break
     elapsed = time.time() - start
-    print(f'{elapsed*1000} ms')
+    print(f'{elapsed} s')
 
 
 main()

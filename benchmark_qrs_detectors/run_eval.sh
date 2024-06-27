@@ -9,6 +9,6 @@ declare -a datasets=("mit-bih-noise-stress-test-e24" "mit-bih-noise-stress-test-
 for dataset in "${datasets[@]}"
 do
   echo "Lancement de l'algo avec le DATASET : $dataset"
-  time_result=$( { time make evaluation DATASET="$dataset" ALGO="wavelet_coef" TOLERANCE=100 ; } 2>&1 | grep real | awk '{print $2}')
+  time_result=$( { time make evaluation DATASET="$dataset" ALGO="seuil_dynamique" TOLERANCE=100 ; } 2>&1 | grep real | awk '{print $2}')
   echo "Temps d'exécution pour le DATASET $dataset : $time_result secondes"
 done

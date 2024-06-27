@@ -130,8 +130,8 @@ def lowpass_filter(data, cutoff, fs, order=5):
     y = filtfilt(b, a, data)
     return y
 
-def differentiate(data):
-    return np.diff(data, prepend=data[0])
+def derivation(data):
+    return np.gradient(data)
 
 def squaring(data):
     return np.square(data)
@@ -142,7 +142,7 @@ def moving_window_integration(data, window_size):
 def preprocess_ecg(data, fs, high, low):
     high_passed_data = highpass_filter(data, high, fs)
     low_passed_data = lowpass_filter(high_passed_data, low, fs)
-    differentiated_data = differentiate(low_passed_data)
+    differentiated_data = derivation(low_passed_data)
     squared_data = squaring(differentiated_data)
     integrated_data = moving_window_integration(squared_data, int(0.0667 * fs))
     return integrated_data

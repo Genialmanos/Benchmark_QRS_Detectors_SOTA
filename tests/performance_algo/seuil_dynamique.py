@@ -1,12 +1,32 @@
 import numpy as np
 from scipy.signal import butter, filtfilt, medfilt, firwin, lfilter
+import pandas as pd
+import time
+from memory_profiler import profile
 
+#@profile
+def main():
+    df = pd.read_csv('../data_csv/mit_bih_long_term/14046.csv')  #  #207
+    #df = pd.read_csv('../data_csv/mit_bih_Arrhythmia/100.csv')
+    # ecg_signal = np.array(df["MLII"], dtype=np.float32)#[:10000]
+    ecg_signal = np.array(df["ECG1"], dtype=np.float32)  # [:10000]
+    fs = 360
+    list = []
+    for i in range(10):
+        start = time.time()
+        seuil_dynamique(ecg_signal, fs)
+        elapsed = time.time() - start
+        list.append(elapsed)
+    print(f'{np.mean(list)*1000} ms')
+
+#@profile
 def seuil_dynamique(sig, freq_sampling):
     cleaned_ecg = preprocess_ecg(sig, freq_sampling, 5, 15)
     peaks = detect_peaks(cleaned_ecg, distance = int(freq_sampling * 0.222))
     qrs_indices = threshold_detection(cleaned_ecg, peaks, freq_sampling, initial_search_samples= int(freq_sampling * 0.83), long_peak_distance=int(freq_sampling*1.111))
     return qrs_indices
 
+#@profile
 def detect_peaks(cleaned_ecg, distance=0, no_peak_distance=300):
 
     last_max = -np.inf  # The most recent encountered maximum value
@@ -54,7 +74,7 @@ def detect_peaks(cleaned_ecg, distance=0, no_peak_distance=300):
     
     return np.array(refined_peaks)
 
-
+#@profile
 def threshold_detection(cleaned_ecg, peaks, fs, initial_search_samples=300, long_peak_distance=400):
     M_VAL = np.max(cleaned_ecg[:initial_search_samples])
     
@@ -134,11 +154,13 @@ def squaring(data):
 def moving_window_integration(data, window_size):
     return np.convolve(data, np.ones(window_size)/window_size, mode='same')
 
+#@profile
 def preprocess_ecg(data, fs, high, low):
-    high_passed_data = highpass_filter(data, high, fs)
-    low_passed_data = lowpass_filter(high_passed_data, low, fs)
-    differentiated_data = differentiate(low_passed_data)
-    squared_data = squaring(differentiated_data)
-    integrated_data = moving_window_integration(squared_data, int(0.0667 * fs))
-    return integrated_data
+    signal = highpass_filter(data, high, fs)
+    signal = lowpass_filter(signal, low, fs)
+    signal = differentiate(signal)
+    signal = squaring(signal)
+    signal = moving_window_integration(signal, int(0.0667 * fs))
+    return signal
 
+main()

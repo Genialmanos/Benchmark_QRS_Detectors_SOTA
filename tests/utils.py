@@ -18,10 +18,14 @@ def print_signal_qrs(signal, qrs, true_qrs, mini = 0, maxi = 1, description = "a
     plt.legend()
     plt.show()
 
-def print_signal(signal, description= "A"):
+def print_signal(signal, description= "A", y = False):
     print(f"signal de longueur: {len(signal)}")
-    plt.figure()
-    plt.plot(signal)
+    plt.figure(figsize = (10, 3))
+    plt.plot(range(len(signal)), signal)
+    plt.xlabel("frame du signal")
+    if y == True:
+        plt.ylabel("mV")
+
     plt.title(label= description)
     plt.show()
     

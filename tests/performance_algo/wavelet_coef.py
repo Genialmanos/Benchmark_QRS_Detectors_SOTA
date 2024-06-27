@@ -7,13 +7,18 @@ from scipy.interpolate import CubicSpline
 import time
 
 def main():
-    df = pd.read_csv('../data_csv/mit_bih_Arrhythmia/100.csv') #207
-    ecg_signal = np.array(df["MLII"], dtype=np.float32)#[:10000]
+    df = pd.read_csv('../data_csv/mit_bih_long_term/14046.csv')  # Arrhythmia/100.csv') #207
+    # ecg_signal = np.array(df["MLII"], dtype=np.float32)#[:10000]
+    ecg_signal = np.array(df["ECG1"], dtype=np.float32)  # [:10000]
     fs = 360
-    start = time.clock_gettime(time.CLOCK_PROCESS_CPUTIME_ID)
-    full_wavelets(ecg_signal, fs)
-    elapsed = time.clock_gettime(time.CLOCK_PROCESS_CPUTIME_ID) - start
-    print(f'{elapsed} s')
+
+    list = []
+    for i in range(10):
+        start = time.time()
+        full_wavelets(ecg_signal, fs)
+        elapsed = time.time() - start
+        list.append(elapsed)
+    print(f'{np.mean(list) * 1000} ms')
 
 def full_wavelets(signal, sampling_rate):
     h = wavelet_decomposition(signal, 5, 4)

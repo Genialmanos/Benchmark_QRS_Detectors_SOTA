@@ -1,0 +1,5 @@
+venv/
+tests/data_csv/
+benchmark_qrs_detectors/data/
+benchmark_qrs_detectors/output
+algo/__pycache__/
